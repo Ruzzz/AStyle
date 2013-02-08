@@ -41,8 +41,8 @@ bool astyle(std::string &content, const char *options)
     size_t copied = content.copy(textIn, len);
 #endif
 
-	if (copied != len)
-		goto exit;
+    if (copied != len)
+        goto exit;
     textIn[len] = '\0';
     error = false;
     char *textOut = AStyleMain(textIn, options, handleError, allocMemory);
@@ -50,15 +50,15 @@ bool astyle(std::string &content, const char *options)
     {
         if (textOut)
             delete [] textOut;
-		goto exit;
+        goto exit;
     }
     if (textOut) {
-		content.assign(textOut, strlen(textOut));
-		delete [] textOut;
-		delete [] textIn;
-		return true;
-	}
+        content.assign(textOut, strlen(textOut));
+        delete [] textOut;
+        delete [] textIn;
+        return true;
+    }
 exit:
-	delete [] textIn;
-	return false;
+    delete [] textIn;
+    return false;
 }
