@@ -28,10 +28,12 @@ char *allocMemory(unsigned long bytesNeeded)
 
 bool astyle(std::string &content, const char *options)
 {
+    // allocate internal buffer
     size_t len = content.size();
     char *textIn = new(std::nothrow) char[len + 1];
     if (!textIn)
         return false;
+    // copy to internal buffer
 #ifdef WIN32
 #pragma warning(push)  // FIX
 #pragma warning(disable: 4996)
@@ -40,25 +42,28 @@ bool astyle(std::string &content, const char *options)
 #else
     size_t copied = content.copy(textIn, len);
 #endif
-
-    if (copied != len)
-        goto exit;
+	if (copied != len)
+    {
+        delete[] textIn;
+        return false;
+    }
     textIn[len] = '\0';
+    // call astyle
     error = false;
     char *textOut = AStyleMain(textIn, options, handleError, allocMemory);
+    delete[] textIn;
+    // check error
     if (error)
     {
         if (textOut)
-            delete [] textOut;
-        goto exit;
+            delete[] textOut;
+        return false;
     }
-    if (textOut) {
-        content.assign(textOut, strlen(textOut));
-        delete [] textOut;
-        delete [] textIn;
-        return true;
-    }
-exit:
-    delete [] textIn;
-    return false;
+    if (!textOut)
+        return false;
+    // return result
+    std::string result(textOut, strlen(textOut));
+	delete[] textOut;
+    content.swap(result);
+	return true;
 }
