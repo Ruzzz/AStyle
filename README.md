@@ -1,6 +1,6 @@
 # About
 
-Source files taken from [original svn of AStyle](https://astyle.svn.sourceforge.net/svnroot/astyle/trunk/AStyle/src/).
+Source files taken from [original svn of AStyle](http://astyle.sourceforge.net/).
 
 # License
 
